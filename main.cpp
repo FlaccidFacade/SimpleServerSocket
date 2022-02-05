@@ -3,21 +3,24 @@
 // Build and run. go to browser and type localhost:8080 to see message
 // or use  curl -X GET "localhost:8080"
 // review socket.h for function usage
+
+
 #include <unistd.h>
 #include <stdio.h>
 #include <sys/socket.h>
 #include <stdlib.h>
 #include <netinet/in.h>
 #include <string.h>
+
 #define PORT 8080
 
 int main(int argc, char const *argv[]){
     
+    //declare address struct and option variable
     struct sockaddr_in address;
+    socklen_t addrlen = sizeof(address);
     int opt = 1;
-    int addrlen = sizeof(address);
-    char buffer[1024] = {0};
-    char *hello = "Hello World";
+    
        
     // Creating socket file descriptor
     /*int sockfd = socket(domain, type, protocol)
@@ -37,7 +40,8 @@ int main(int argc, char const *argv[]){
     // Set socket options.
     setsockopt(server_fd, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT,&opt, sizeof(opt));
 
-    //create address struct
+    //here we set the values of sockaddr_in to declare the PORT
+    //later we have to cast it to sockaddr for the function use
     address.sin_family = AF_INET;
     address.sin_addr.s_addr = INADDR_ANY;
     address.sin_port = htons( PORT );
@@ -49,11 +53,12 @@ int main(int argc, char const *argv[]){
     listen(server_fd, 3);
 
     // wait for connection and open a new socket when it arrives
-    int new_socket = accept(server_fd, (struct sockaddr *)&address, (socklen_t*)&addrlen);
+    int new_socket = accept(server_fd, (struct sockaddr *)&address, &addrlen);
 
     //send hello world message
-    //sends N bytes of the "hello" buffer
-    send(new_socket , hello , strlen(hello) , 0 );
+    //sends N bytes of the message buffer
+    char *message = "Hello World\n";
+    send(new_socket , message , strlen(message) , 0 );
    
     return 0;
 }
