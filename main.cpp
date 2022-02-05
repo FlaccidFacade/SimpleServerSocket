@@ -1,6 +1,7 @@
 // Server side C/C++ program to demonstrate Socket programming
 // This is only set to work with IPV4 and TCP
 // Build and run. go to browser and type localhost:8080 to see message
+// or use  curl -X GET "localhost:8080"
 // review socket.h for function usage
 #include <unistd.h>
 #include <stdio.h>
@@ -9,9 +10,9 @@
 #include <netinet/in.h>
 #include <string.h>
 #define PORT 8080
-int main(int argc, char const *argv[])
-{
-    int server_fd, new_socket, valread;
+
+int main(int argc, char const *argv[]){
+    
     struct sockaddr_in address;
     int opt = 1;
     int addrlen = sizeof(address);
@@ -31,7 +32,7 @@ int main(int argc, char const *argv[])
 
     
     */
-    server_fd = socket(AF_INET, SOCK_STREAM, 0);
+    int server_fd = socket(AF_INET, SOCK_STREAM, 0);
        
     // Set socket options.
     setsockopt(server_fd, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT,&opt, sizeof(opt));
@@ -48,7 +49,7 @@ int main(int argc, char const *argv[])
     listen(server_fd, 3);
 
     // wait for connection and open a new socket when it arrives
-    new_socket = accept(server_fd, (struct sockaddr *)&address, (socklen_t*)&addrlen);
+    int new_socket = accept(server_fd, (struct sockaddr *)&address, (socklen_t*)&addrlen);
 
     //send hello world message
     //sends N bytes of the "hello" buffer
